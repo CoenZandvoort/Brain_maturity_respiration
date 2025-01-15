@@ -83,7 +83,7 @@ end
 % check if any data entries should be removed because we are unsure about
 % the discontinuation date.
 idx_include = find(data.last_with_caf == 1 & (data.caf_off - data.pma) < 2);
-idx_include = idx_include(~strcmp(data.unsure(idx_include), 'Unsure stop date'));
+idx_include = idx_include(~strcmp(data.unsure(idx_include), 'medical notes unavailable'));
 
 
 % remove bias from combined brain age estimates
@@ -94,7 +94,7 @@ infant_num = data.infant_num(idx_include);
 
 % linear models
 stat_model_label = 'caf_stop ~ brain_maturity + Infection';
-tbl = table(data.caf_off(idx_include)', brain_maturity, infection', ...
+tbl = table(data.caf_off(idx_include)', brain_maturity, categorical(infection)', ...
     'VariableNames', {'caf_stop', 'brain_maturity', 'Infection'});
 
 lm = fitlm(tbl, stat_model_label);
