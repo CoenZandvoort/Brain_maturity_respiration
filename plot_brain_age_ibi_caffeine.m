@@ -105,17 +105,11 @@ brain_maturity_adj = adj(1).XData;
 caf_off_adj = adj(1).YData;
 close
 
-% get p-values for model (here, we make a full model including 
-% predictors (fixed+random incl. confounding factors) and response
-stat_model_label = [stat_model_label, ' + (1 + brain_maturity | infant)'];
-tbl = [tbl, table(infant_num', 'VariableNames', {'infant'})];
-lme_p_values = fitlme(tbl, stat_model_label);
-
 
 % regression of adjusted responses
-stat_model_label = 'caf_stop ~ brain_maturity + (1 + brain_maturity | infant)';
-tbl = table(caf_off_adj', brain_maturity_adj', infant_num', ...
-    'VariableNames', {'caf_stop', 'brain_maturity', 'infant'});
+stat_model_label = 'caf_stop ~ brain_maturity';
+tbl = table(caf_off_adj', brain_maturity_adj', ...
+    'VariableNames', {'caf_stop', 'brain_maturity'});
 lme = fitlme(tbl, stat_model_label);
 
 
@@ -129,7 +123,7 @@ hold on
 ci_mean = glmval(lme.Coefficients.Estimate, brain_maturity_adj', 'identity', lme.Coefficients);
 plot(brain_maturity_adj', ci_mean, 'k', 'linewidth', 2)
 
-title(sprintf('%.04f - %.06f', lme_p_values.Coefficients.Estimate(2), lme_p_values.Coefficients.pValue(2)))
+title(sprintf('%.04f - %.06f', lm.Coefficients.Estimate(2), lm.Coefficients.pValue(2)))
 xlabel('Brain maturity [weeks]')
 ylabel('PMA at caffeine stop [weeks]')
 
